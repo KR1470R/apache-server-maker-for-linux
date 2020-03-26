@@ -1,7 +1,7 @@
-#apache-server-maker-for-linux 
+# apache-server-maker-for-linux 
 simple tool for make server apache for linux 
 
-#Instruction
+# Instruction
 1.Run setup file.\
 2.Enter Name for your site.\
 3.Enter URL for site. For example www.example.com. \
