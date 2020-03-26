@@ -19,8 +19,17 @@ echo 'installing needs packages...'
 sudo apt install apache2 
 echo 'creating & writing configs apache server...'
 sudo touch /etc/apache2/sites-available/$NAME.conf
-echo 'Please enter server name( www.example.com ):'
-read SERVER_NAME
+echo 'Please enter server URL( www.example.com ):'
+read SERVER_LINK
+export SERVER_LINK
+get_value=$(python  handler.py) ; 
+if [[ $get_value == 'True' ]]; then 
+	echo 'continue'
+else
+	echo 'ERROR! please enter valid URL. Try Again'
+	exit 1
+fi
+
 sudo chmod 777 /etc/apache2/sites-available/$NAME.conf
 sudo echo "
 <VirtualHost *:80>
@@ -31,7 +40,7 @@ sudo echo "
 # match this virtual host. For the default virtual host (this file) this
 # value is not decisive as it is used as a last resort host regardless.
 # However, you must set it for any further virtual host explicitly.
-ServerName "$SERVER_NAME"
+ServerName "$SERVER_LINK"
 
 ServerAdmin webmaster@localhost
 DocumentRoot /var/www/"$NAME"
@@ -58,11 +67,11 @@ CustomLog ${APACHE_LOG_DIR}/access.log combined
 echo 'setting up hosts...'
 GET_IP=$(hostname -I)
 sudo chmod 777 /etc/hosts
-sudo echo $GET_IP $SERVER_NAME >> /etc/hosts
+sudo echo $GET_IP $SERVER_LINK >> /etc/hosts
 echo 'activating server...'
 sudo a2ensite $NAME.conf
 sudo service apache2 restart 
 sudo systemctl reload apache2
-echo '${GREEN}success!${NC}'
-echo 'link for your site: ' $SERVER_NAME
+echo 'success!'
+echo 'link for your site: ' $SERVER_LINK
 echo 'for edit template your site here "/var/www/'$NAME'/". '
